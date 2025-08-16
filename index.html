@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Brand Content OS - One Platform. Every Brand. Infinite Content.</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #ffffff;
+            background: #0a0a0a;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Three.js Background */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            max-width: 800px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ffffff, #f0f0f0, #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: textShimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes textShimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .hero .subheadline {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            margin-bottom: 3rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .waitlist-form {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+
+        .email-input {
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            color: white;
+            width: 300px;
+            transition: all 0.3s ease;
+        }
+
+        .email-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .email-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.05);
+        }
+
+        .cta-button {
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(255, 107, 107, 0.4);
+        }
+
+        .lottie-animation {
+            margin-top: 3rem;
+            animation: fadeInUp 1s ease-out 0.9s both;
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            padding: 100px 0;
+            background: linear-gradient(180deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%);
+        }
+
+        .section-title {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .step {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.5s ease;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .step.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .step:hover {
+            transform: translateY(-10px) scale(1.05);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .step h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #667eea;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 0;
+            background: #0a0a0a;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .feature-card {
+            padding: 2.5rem;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            transition: all 0.5s ease;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .feature-card.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(102, 126, 234, 0.3);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #667eea;
+        }
+
+        /* Showcase Section */
+        .showcase {
+            padding: 100px 0;
+            background: linear-gradient(180deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%);
+        }
+
+        .showcase-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-top: 4rem;
+        }
+
+        .showcase-left {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .content-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            transform: scale(0.9);
+            opacity: 0.7;
+            transition: all 0.5s ease;
+        }
+
+        .content-card.active {
+            transform: scale(1);
+            opacity: 1;
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .showcase-right {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .platform-card {
+            padding: 1.5rem;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .platform-card:hover {
+            transform: scale(1.05);
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        /* Final CTA Section */
+        .final-cta {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            text-align: center;
+        }
+
+        .confetti {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Footer */
+        footer {
+            background: #0a0a0a;
+            padding: 3rem 0 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            color: #667eea;
+            text-decoration: none;
+            padding: 0.5rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: rgba(102, 126, 234, 0.2);
+            transform: translateY(-3px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .waitlist-form {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .email-input {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .showcase-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scroll reveal animations */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease-out;
+        }
+
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>One Platform.<br>Every Brand.<br>Infinite Content.</h1>
+                <p class="subheadline">Create, localize, and publish blogs, videos, and product listings effortlessly across all your brands.</p>
+                
+                <form class="waitlist-form" id="waitlistForm">
+                    <input type="email" class="email-input" placeholder="Enter your email" required>
+                    <button type="submit" class="cta-button">Join the Waitlist</button>
+                </form>
+
+                <div class="lottie-animation" id="heroAnimation" style="width: 400px; height: 300px; margin: 0 auto;"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+        <div class="container">
+            <h2 class="section-title scroll-reveal">How It Works</h2>
+            <div class="steps">
+                <div class="step scroll-reveal">
+                    <div class="step-number">1</div>
+                    <h3>Create</h3>
+                    <p>AI-assisted blogs, scripts, images, and videos. Generate diverse content types from a single interface with advanced AI tools.</p>
+                </div>
+                <div class="step scroll-reveal">
+                    <div class="step-number">2</div>
+                    <h3>Localize</h3>
+                    <p>One click to adapt content for multiple markets. AI understands cultural nuances, not just language translation.</p>
+                </div>
+                <div class="step scroll-reveal">
+                    <div class="step-number">3</div>
+                    <h3>Publish</h3>
+                    <p>Push to Git, social, or e-commerce platforms. Seamlessly distribute content across all your channels automatically.</p>
+                </div>
+                <div class="step scroll-reveal">
+                    <div class="step-number">4</div>
+                    <h3>Automate</h3>
+                    <p>Custom workflows with brand ambassadors. Build visual AI workflows for consistent content delivery at scale.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title scroll-reveal">Powerful Features</h2>
+            <div class="features-grid">
+                <div class="feature-card scroll-reveal">
+                    <div class="feature-icon">🏢</div>
+                    <h3>Multi-Brand Dashboard</h3>
+                    <p>Manage all your brands from one centralized platform with a comprehensive 360° view of all content assets.</p>
+                </div>
+                <div class="feature-card scroll-reveal">
+                    <div class="feature-icon">⚡</div>
+                    <h3>ComfyUI Integration</h3>
+                    <p>Visual AI workflow builder that enables custom content creation pipelines without coding knowledge.</p>
+                </div>
+                <div class="feature-card scroll-reveal">
+                    <div class="feature-icon">🎭</div>
+                    <h3>Brand Ambassadors</h3>
+                    <p>AI avatars with mapped voices that humanize your global marketing across different cultural contexts.</p>
+                </div>
+                <div class="feature-card scroll-reveal">
+                    <div class="feature-icon">💬</div>
+                    <h3>CRM Threads</h3>
+                    <p>Unified system to manage customer conversations across all channels from a single interface.</p>
+                </div>
+                <div class="feature-card scroll-reveal">
+                    <div class="feature-icon">⏰</div>
+                    <h3>Scheduled Publishing</h3>
+                    <p>Timed content drops customized per market with automated distribution across different time zones.</p>
+                </div>
+                <div class="feature-card scroll-reveal">
+                    <div class="feature-icon">🌍</div>
+                    <h3>Global Localization</h3>
+                    <p>One-click adaptation for global markets with AI that understands cultural nuances and sensitivities.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Showcase Section -->
+    <section class="showcase">
+        <div class="container">
+            <h2 class="section-title scroll-reveal">See It In Action</h2>
+            <div class="showcase-container scroll-reveal">
+                <div class="showcase-left">
+                    <div class="content-card active" id="blogCard">
+                        <h4>📝 AI-Generated Blog</h4>
+                        <p>"Top 10 Sustainable Fashion Trends for 2025"</p>
+                        <small>Auto-optimized for SEO</small>
+                    </div>
+                    <div class="content-card" id="scriptCard">
+                        <h4>🎬 Video Script</h4>
+                        <p>"Product Demo: Eco-Friendly Sneakers"</p>
+                        <small>Ready for TikTok & Instagram</small>
+                    </div>
+                    <div class="content-card" id="listingCard">
+                        <h4>🛍️ Product Listing</h4>
+                        <p>"Premium Organic Cotton T-Shirt"</p>
+                        <small>Multi-platform ready</small>
+                    </div>
+                </div>
+                <div class="showcase-right">
+                    <div class="platform-card">
+                        <h4>🐙 GitHub</h4>
+                        <p>Auto-commit to repo</p>
+                    </div>
+                    <div class="platform-card">
+                        <h4>📱 Social Media</h4>
+                        <p>Instagram, TikTok, Twitter</p>
+                    </div>
+                    <div class="platform-card">
+                        <h4>🛒 E-commerce</h4>
+                        <p>Shopify, Amazon, WooCommerce</p>
+                    </div>
+                    <div class="platform-card">
+                        <h4>📧 CRM</h4>
+                        <p>Customer engagement</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA Section -->
+    <section class="final-cta">
+        <div class="container">
+            <h2 class="scroll-reveal" style="font-size: 3rem; margin-bottom: 2rem;">Ready to Transform Your Multi-Brand Strategy?</h2>
+            <p class="scroll-reveal" style="font-size: 1.3rem; margin-bottom: 3rem; opacity: 0.9;">Join thousands of brands already scaling globally with AI-powered content orchestration.</p>
+            <form class="waitlist-form scroll-reveal" id="finalWaitlistForm">
+                <input type="email" class="email-input" placeholder="Enter your email" required>
+                <button type="submit" class="cta-button">Get Early Access</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <p>&copy; 2025 Multi-Brand Content OS. All rights reserved.</p>
+                </div>
+                <div class="social-links">
+                    <a href="#" aria-label="Twitter">Twitter</a>
+                    <a href="#" aria-label="LinkedIn">LinkedIn</a>
+                    <a href="#" aria-label="GitHub">GitHub</a>
+                    <a href="mailto:hello@multibrandos.com">Contact</a>
+                    <a href="#">Privacy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Three.js Background Animation
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        // Create floating particles
+        const geometry = new THREE.SphereGeometry(0.5, 32, 32);
+        const materials = [
+            new THREE.MeshBasicMaterial({ color: 0x667eea, transparent: true, opacity: 0.6 }),
+            new THREE.MeshBasicMaterial({ color: 0x764ba2, transparent: true, opacity: 0.6 }),
+            new THREE.MeshBasicMaterial({ color: 0xf093fb, transparent: true, opacity: 0.6 })
+        ];
+
+        const particles = [];
+        for (let i = 0; i < 50; i++) {
+            const particle = new THREE.Mesh(geometry, materials[Math.floor(Math.random() * materials.length)]);
+            particle.position.set(
+                (Math.random() - 0.5) * 100,
+                (Math.random() - 0.5) * 100,
+                (Math.random() - 0.5) * 100
+            );
+            particle.userData = {
+                velocity: new THREE.Vector3(
+                    (Math.random() - 0.5) * 0.02,
+                    (Math.random() - 0.5) * 0.02,
+                    (Math.random() - 0.5) * 0.02
+                )
+            };
+            scene.add(particle);
+            particles.push(particle);
+        }
+
+        camera.position.z = 30;
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            particles.forEach(particle => {
+                particle.position.add(particle.userData.velocity);
+                particle.rotation.x += 0.01;
+                particle.rotation.y += 0.01;
+
+                // Bounce off boundaries
+                if (Math.abs(particle.position.x) > 50) particle.userData.velocity.x *= -1;
+                if (Math.abs(particle.position.y) > 50) particle.userData.velocity.y *= -1;
+                if (Math.abs(particle.position.z) > 50) particle.userData.velocity.z *= -1;
+            });
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Scroll reveal animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed', 'animate');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.scroll-reveal, .step, .feature-card').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Showcase animation cycle
+        const contentCards = document.querySelectorAll('.content-card');
+        let currentCard = 0;
+
+        setInterval(() => {
+            contentCards[currentCard].classList.remove('active');
+            currentCard = (currentCard + 1) % contentCards.length;
+            contentCards[currentCard].classList.add('active');
+        }, 3000);
+
+        // Form submission with confetti
+        function createConfetti() {
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = '-10px';
+                confetti.style.width = Math.random() * 10 + 5 + 'px';
+                confetti.style.height = confetti.style.width;
+                confetti.style.background = ['#667eea', '#764ba2', '#f093fb', '#ff6b6b'][Math.floor(Math.random() * 4)];
+                confetti.style.borderRadius = '50%';
+                confetti.style.position = 'fixed';
+                confetti.style.animation = `fall ${Math.random() * 2 + 3}s linear forwards`;
+                document.body.appendChild(confetti);
+
+                setTimeout(() => confetti.remove(), 5000);
+            }
+        }
+
+        // Add confetti CSS animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fall {
+                to {
+                    transform: translateY(100vh) rotate(360deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Handle form submissions
+        document.getElementById('waitlistForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = e.target.querySelector('.email-input').value;
+            
+            // Simulate API call
+            setTimeout(() => {
+                createConfetti();
+                e.target.querySelector('.cta-button').textContent = '✓ Added to Waitlist!';
+                e.target.querySelector('.email-input').value = '';
+            }, 500);
+        });
+
+        document.getElementById('finalWaitlistForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = e.target.querySelector('.email-input').value;
+            
+            setTimeout(() => {
+                createConfetti();
+                e.target.querySelector('.cta-button').textContent = '🚀 You\'re In!';
+                e.target.querySelector('.email-input').value = '';
+            }, 500);
+        });
+
+        // Hero Lottie Animation (simplified SVG animation since we can't load external Lottie files)
+        const heroAnimDiv = document.getElementById('heroAnimation');
+        heroAnimDiv.innerHTML = `
+            <svg viewBox="0 0 400 300" style="width: 100%; height: 100%;">
+                <defs>
+                    <linearGradient id="nodeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                
+                <circle cx="50" cy="150" r="20" fill="url(#nodeGrad)" opacity="0.8">
+                    <animate attributeName="r" values="20;25;20" dur="2s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="150" cy="100" r="15" fill="url(#nodeGrad)" opacity="0.6">
+                    <animate attributeName="r" values="15;20;15" dur="2.5s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="250" cy="180" r="18" fill="url(#nodeGrad)" opacity="0.7">
+                    <animate attributeName="r" values="18;23;18" dur="1.8s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="350" cy="120" r="16" fill="url(#nodeGrad)" opacity="0.9">
+                    <animate attributeName="r" values="16;21;16" dur="2.2s" repeatCount="indefinite"/>
+                </circle>
+                
+                <path d="M50 150 L150 100" stroke="rgba(255,255,255,0.3)" stroke-width="2">
+                    <animate attributeName="opacity" values="0.3;0.8;0.3" dur="1.5s" repeatCount="indefinite"/>
+                </path>
+                <path d="M150 100 L250 180" stroke="rgba(255,255,255,0.3)" stroke-width="2">
+                    <animate attributeName="opacity" values="0.3;0.8;0.3" dur="1.8s" repeatCount="indefinite"/>
+                </path>
+                <path d="M250 180 L350 120" stroke="rgba(255,255,255,0.3)" stroke-width="2">
+                    <animate attributeName="opacity" values="0.3;0.8;0.3" dur="2.1s" repeatCount="indefinite"/>
+                </path>
+                
+                <text x="200" y="250" text-anchor="middle" fill="white" font-size="14" opacity="0.8">
+                    AI Content Flow
+                </text>
+            </svg>
+        `;
+    </script>
+</body>
+</html>
